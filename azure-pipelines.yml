@@ -59,5 +59,24 @@ stages:
               command: 'plan'
               environmentServiceNameAzureRM: 'may-sc'
 
+  - stage: LastStage
+    displayName: Apply
+    jobs:
+      - job: terraformapply
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstae'
 
-              
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              commandOptions: '-auto-approve'
+              environmentServiceNameAzureRM: 'may-sc'
