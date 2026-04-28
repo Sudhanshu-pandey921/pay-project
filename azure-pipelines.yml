@@ -1,4 +1,18 @@
 trigger:
  - main
 
-pool: 
+pool: may-prac-pool
+stages:
+  - stage: FirstStage
+    displayName: Init
+    jobs:
+        - job: terraforminit
+          steps:
+            - task: TerraformTaskV4@4
+              inputs:
+               provider: 'azurerm'
+               command: 'init'
+               backendServiceArm: 'may-sc'
+               backendAzureRmStorageAccountName: 'maystg12'
+               backendAzureRmContainerName: 'maycnt12'
+               backendAzureRmKey: 'may.tfstae'
