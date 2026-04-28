@@ -16,3 +16,48 @@ stages:
                backendAzureRmStorageAccountName: 'maystg12'
                backendAzureRmContainerName: 'maycnt12'
                backendAzureRmKey: 'may.tfstae'
+
+
+  - stage: SecondStage
+    displayName: Validate
+    jobs:
+      - job: terraformvalidate
+        steps:
+            - task: TerraformTask@5
+              inputs:
+               provider: 'azurerm'
+               command: 'init'
+               backendServiceArm: 'may-sc'
+               backendAzureRmStorageAccountName: 'maystg12'
+               backendAzureRmContainerName: 'maycnt12'
+               backendAzureRmKey: 'may.tfstae'
+
+
+            - task: TerraformTask@5
+              inputs:
+                provider: 'azurerm'
+                command: 'validate'
+           
+  - stage: ThirdStage
+    displayName: Plan
+    jobs: 
+      - job: terraformplan
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'mycnt12'
+              backendAzureRmKey: 'may.tfstae'
+
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'may-sc'
+
+
+              
