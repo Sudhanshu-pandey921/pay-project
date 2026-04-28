@@ -1,7 +1,7 @@
 trigger:
  - main
 
-pool: may-prac-pool
+pool: may-pool
 stages:
   - stage: FirstStage
     displayName: Init
