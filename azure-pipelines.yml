@@ -15,7 +15,7 @@ stages:
                backendServiceArm: 'may-sc'
                backendAzureRmStorageAccountName: 'maystg12'
                backendAzureRmContainerName: 'maycnt12'
-               backendAzureRmKey: 'may.tfstae'
+               backendAzureRmKey: 'may.tfstate'
 
 
   - stage: SecondStage
@@ -30,7 +30,7 @@ stages:
                backendServiceArm: 'may-sc'
                backendAzureRmStorageAccountName: 'maystg12'
                backendAzureRmContainerName: 'maycnt12'
-               backendAzureRmKey: 'may.tfstae'
+               backendAzureRmKey: 'may.tfstate'
 
 
             - task: TerraformTask@5
@@ -49,8 +49,8 @@ stages:
               command: 'init'
               backendServiceArm: 'may-sc'
               backendAzureRmStorageAccountName: 'maystg12'
-              backendAzureRmContainerName: 'mycnt12'
-              backendAzureRmKey: 'may.tfstae'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
 
 
           - task: TerraformTask@5
@@ -71,7 +71,7 @@ stages:
               backendServiceArm: 'may-sc'
               backendAzureRmStorageAccountName: 'maystg12'
               backendAzureRmContainerName: 'maycnt12'
-              backendAzureRmKey: 'may.tfstae'
+              backendAzureRmKey: 'may.tfstate'
 
 
           - task: TerraformTask@5
