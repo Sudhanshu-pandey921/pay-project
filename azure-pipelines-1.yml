@@ -15,6 +15,8 @@ stages:
               targetType: 'inline'
               script: |
                 # Write your commands here
+                 sudo apt-get update
+                 sudo apt-get install -y unzip
                  curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
                  export PATH=$PATH:$PWD
                  ./tflint --init
