@@ -1,0 +1,72 @@
+trigger: none
+
+pool: may-pool
+
+stages:
+  - stage: Lint
+    displayName: Lint process
+    jobs:
+      - job: terraformlint
+        steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Write your commands here
+                
+                tflint --init
+                tflint
+
+  - stage: Init
+    displayName: Terraform Init
+    dependsOn: Lint
+    jobs:
+      - job: terraforminit
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
+
+  - stage: Validate
+    displayName: Terraform Validate
+    dependsOn: Init
+    jobs:
+      - job: terraformvalidate
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+
+  - stage: SecurityScan
+    displayName: Checkov Security Scan
+    dependsOn: Validate
+    jobs:
+      - job: checkovjob
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
+
+
+          
+          
