@@ -2,6 +2,8 @@ trigger: none
 
 pool: may-pool
 
+# For Linting
+
 stages:
   - stage: Lint
     displayName: Lint process
@@ -17,6 +19,8 @@ stages:
                 tflint --init
                 tflint
 
+  # For Terraform Init
+
   - stage: Init
     displayName: Terraform Init
     dependsOn: Lint
@@ -31,6 +35,8 @@ stages:
               backendAzureRmStorageAccountName: 'maystg12'
               backendAzureRmContainerName: 'maycnt12'
               backendAzureRmKey: 'may.tfstate'
+
+  # For Terraform Validate
 
   - stage: Validate
     displayName: Terraform Validate
@@ -52,6 +58,8 @@ stages:
               provider: 'azurerm'
               command: 'validate'
 
+ # For securityScan
+
   - stage: SecurityScan
     displayName: Checkov Security Scan
     dependsOn: Validate
@@ -67,6 +75,55 @@ stages:
               backendAzureRmContainerName: 'maycnt12'
               backendAzureRmKey: 'may.tfstate'
 
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Write your commands here
+                
+                python -m pip install checkov
+                checkove -d
 
-          
-          
+  # For Terraform Plan
+  - stage: TerraformPlan
+    displayName: Plan
+    dependsOn: SecurityScan
+    jobs:
+      - job: terraformplan
+        steps:
+           - task: TerraformTask@5
+             inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
+
+           - task: TerraformTask@5
+             inputs:
+               provider: 'azurerm'
+               command: 'plan'
+               environmentServiceNameAzureRM: 'may-sc'
+
+  # For Terraform apply
+  - stage: TerraformApply
+    displayName: Apply
+    dependsOn: TerraformPlan
+    jobs:
+      - job: terraformapply
+        steps:
+           - task: TerraformTask@5
+             inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'may-sc'
+              backendAzureRmStorageAccountName: 'maystg12'
+              backendAzureRmContainerName: 'maycnt12'
+              backendAzureRmKey: 'may.tfstate'
+
+           - task: TerraformTask@5
+             inputs:
+               provider: 'azurerm'
+               command: 'apply'
+               environmentServiceNameAzureRM: 'may-sc'
