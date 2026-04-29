@@ -80,3 +80,10 @@ stages:
               command: 'apply'
               commandOptions: '-auto-approve'
               environmentServiceNameAzureRM: 'may-sc'
+
+  - stage: Lint
+    displayName: Linting
+    jobs:
+      - job: terraformlint
+        steps:
+          
