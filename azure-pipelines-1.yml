@@ -16,6 +16,7 @@ stages:
               script: |
                 # Write your commands here
                 curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+                export PATH=$PATH:$PWD
                 tflint --init
                 tflint
 
@@ -82,7 +83,7 @@ stages:
                 # Write your commands here
                 
                 python -m pip install checkov
-                checkove -d
+                checkov -d
 
   # For Terraform Plan
   - stage: TerraformPlan
