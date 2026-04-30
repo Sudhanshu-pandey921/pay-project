@@ -76,14 +76,14 @@ stages:
               backendAzureRmContainerName: 'maycnt12'
               backendAzureRmKey: 'may.tfstate'
 
-          - task: Bash@3
+          - task: PowerShell@2
+            displayName: Security Scan - Checkov
             inputs:
-              targetType: 'inline'
-              script: |
-                # Write your commands here
-                
-                python -m pip install checkov
-                checkov -d .
+             targetType: 'inline'
+             script: |
+               py -m pip install --upgrade pip
+               py -m pip install checkov
+               py -m checkov -d "$(System.DefaultWorkingDirectory)"
 
   # For Terraform Plan
   - stage: TerraformPlan
