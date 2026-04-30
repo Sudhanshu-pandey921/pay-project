@@ -83,8 +83,13 @@ stages:
               script: |
                python -m pip install --upgrade pip
                python -m pip install checkov
-               $checkovPath = "$env:LOCALAPPDATA\Python\pythoncore-3.14-64\Scripts\checkov.exe"
-               & $checkovPath -d "$(System.DefaultWorkingDirectory)"
+
+               $scriptsPath = python -m site --user-site
+               $scriptsPath = $scriptsPath.Trim() -replace 'site-packages','Scripts'
+
+               Write-Host "Scripts Path: $scriptsPath"
+
+               & "$scriptsPath\checkov.exe" -d "$(System.DefaultWorkingDirectory)"
 
   # For Terraform Plan
   - stage: TerraformPlan
