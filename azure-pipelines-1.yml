@@ -11,14 +11,14 @@ stages:
       - job: terraformlint
         steps:
           - task: PowerShell@2
+            displayName: Install TFLint
             inputs:
-              targetType: 'inline'
-              script: |
-                # Write your PowerShell commands here.
-                
-                choco install tflint -y
-                tflint --init
-                tflint
+             targetType: 'inline'
+             script: |
+              Invoke-WebRequest -Uri "https://github.com/terraform-linters/tflint/releases/latest/download/tflint_windows_amd64.zip" -OutFile "tflint.zip"
+              Expand-Archive -Path "tflint.zip" -DestinationPath ".\tflint"
+              $env:PATH += ";$(System.DefaultWorkingDirectory)\tflint"
+              .\tflint\tflint.exe --version
 
   # For Terraform Init
 
