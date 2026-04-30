@@ -75,21 +75,22 @@ stages:
               backendAzureRmStorageAccountName: 'maystg12'
               backendAzureRmContainerName: 'maycnt12'
               backendAzureRmKey: 'may.tfstate'
-
+          
           - task: PowerShell@2
             displayName: Security Scan - Checkov
             inputs:
-              targetType: 'inline'
-              script: |
+             targetType: 'inline'
+             script: |
                python -m pip install --upgrade pip
                python -m pip install checkov
 
-               $scriptsPath = python -m site --user-site
-               $scriptsPath = $scriptsPath.Trim() -replace 'site-packages','Scripts'
+               $checkovPy = Get-ChildItem "C:\Users\HP\AppData\Local\Python" -Recurse -Filter main.py -ErrorAction SilentlyContinue |
+                   Where-Object { $_.FullName -like "*checkov*" } |
+                   Select-Object -First 1
 
-               Write-Host "Scripts Path: $scriptsPath"
+               Write-Host "Checkov Python File: $($checkovPy.FullName)"
 
-               & "$scriptsPath\checkov.exe" -d "$(System.DefaultWorkingDirectory)"
+               python $checkovPy.FullName -d "$(System.DefaultWorkingDirectory)"
 
   # For Terraform Plan
   - stage: TerraformPlan
