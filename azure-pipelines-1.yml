@@ -79,11 +79,11 @@ stages:
           - task: PowerShell@2
             displayName: Security Scan - Checkov
             inputs:
-             targetType: 'inline'
-             script: |
-               py -m pip install --upgrade pip
-               py -m pip install checkov
-               py -m checkov -d "$(System.DefaultWorkingDirectory)"
+              targetType: 'inline'
+              script: |
+               python -m pip install --upgrade pip
+               python -m pip install checkov
+               python -m checkov -d "$(System.DefaultWorkingDirectory)"
 
   # For Terraform Plan
   - stage: TerraformPlan
