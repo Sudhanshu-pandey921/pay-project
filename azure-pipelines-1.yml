@@ -10,18 +10,15 @@ stages:
     jobs:
       - job: terraformlint
         steps:
-          - task: Bash@3
+          - task: PowerShell@2
             inputs:
               targetType: 'inline'
               script: |
-                # Write your commands here
-                 sudo apt-get update
-                 sudo apt-get install -y unzip
-                 curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-                 export PATH=$PATH:$PWD
-                 tflint --init
-                 tflint
-               
+                # Write your PowerShell commands here.
+                
+                choco install tflint -y
+                tflint --init
+                tflint
 
   # For Terraform Init
 
